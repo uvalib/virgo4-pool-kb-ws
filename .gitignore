@@ -1,0 +1,8 @@
+/bin/
+*.darwin
+*.linux
+.DS_Store
+.idea/
+*.test
+coverage.out
+scripts/dev.local.sh

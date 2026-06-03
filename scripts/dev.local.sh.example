@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Local virgo4-pool-kb-ws dev server
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+export V4_POOL_KB_JWT_KEY="${V4_POOL_KB_JWT_KEY:-${V4_JWT_KEY}}"
+export V4_POOL_KB_PORT="${V4_POOL_KB_PORT:-8087}"
+export V4_POOL_KB_AWS_REGION="${V4_POOL_KB_AWS_REGION:-us-east-1}"
+export V4_POOL_KB_ID="${V4_POOL_KB_ID}"
+export V4_POOL_KB_PROVIDER="${V4_POOL_KB_PROVIDER:-bedrock}"
+#export V4_POOL_KB_PROVIDER="${V4_POOL_KB_PROVIDER:-mock}"
+export V4_POOL_KB_SCORE_THRESHOLD="${V4_POOL_KB_SCORE_THRESHOLD:-0}"
+export V4_POOL_KB_DEFAULT_LIMIT="${V4_POOL_KB_DEFAULT_LIMIT:-20}"
+export V4_KB_DETAIL_BASE="${V4_KB_DETAIL_BASE:-}"
+
+echo "pool-kb: port=${V4_POOL_KB_PORT} provider=${V4_POOL_KB_PROVIDER} kb=${V4_POOL_KB_ID}"
+
+if [[ ! -x bin/v4poolkb ]]; then
+  go build -o bin/v4poolkb ./cmd
+fi
+
+ARGS=(
+  -port "${V4_POOL_KB_PORT}"
+  -jwtkey "${V4_POOL_KB_JWT_KEY}"
+  -region "${V4_POOL_KB_AWS_REGION}"
+  -kbid "${V4_POOL_KB_ID}"
+  -threshold "${V4_POOL_KB_SCORE_THRESHOLD}"
+  -limit "${V4_POOL_KB_DEFAULT_LIMIT}"
+  -provider "${V4_POOL_KB_PROVIDER}"
+  -detailresource "${V4_KB_DETAIL_BASE}"
+)
+
+exec ./bin/v4poolkb "${ARGS[@]}"

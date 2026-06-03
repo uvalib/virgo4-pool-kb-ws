@@ -1,0 +1,107 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "KB pool build",
+      "type": "shell",
+      "command": "go build -o bin/v4poolkb ./cmd",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "zsh",
+          "args": ["-lc"]
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "KB pool test",
+      "type": "shell",
+      "command": "go test ./...",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "zsh",
+          "args": ["-lc"]
+        }
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": ["$go"]
+    },
+    {
+      "label": "KB pool (bedrock)",
+      "type": "shell",
+      "command": "V4_POOL_KB_PROVIDER=bedrock ./scripts/dev.local.sh",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "zsh",
+          "args": ["-lc"]
+        }
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "virgo4-pool-kb-ws"
+      },
+      "problemMatcher": {
+        "owner": "go",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^pool-kb:",
+          "endsPattern": "listening on"
+        }
+      }
+    },
+    {
+      "label": "KB pool (mock)",
+      "type": "shell",
+      "command": "V4_POOL_KB_PROVIDER=mock ./scripts/dev.local.sh",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "zsh",
+          "args": ["-lc"]
+        }
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "virgo4-pool-kb-ws"
+      },
+      "problemMatcher": {
+        "owner": "go",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^pool-kb:",
+          "endsPattern": "listening on"
+        }
+      }
+    }
+  ]
+}
