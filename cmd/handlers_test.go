@@ -111,7 +111,54 @@ func TestUvaLibRootPathProxiesSolrPool(t *testing.T) {
 	}
 }
 
-func TestUvaLibByIDReturnsNotFoundForOtherPaths(t *testing.T) {
+func TestRootPathProxiesNamespacedID(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/resource/tsb:59492" {
+			t.Errorf("path=%q", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"fields":[]}`))
+	}))
+	defer upstream.Close()
+
+	svc := &ServiceContext{
+		DetailResourceBase: upstream.URL + "/api/resource",
+		ResourceHTTPClient: upstream.Client(),
+	}
+	r := gin.New()
+	r.GET("/:id", svc.getResourceByID)
+
+	req := httptest.NewRequest(http.MethodGet, "/tsb:59492", nil)
+	req.Header.Set("Authorization", "Bearer test-token")
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("status=%d body=%s", w.Code, w.Body.String())
+	}
+}
+
+func TestIsNamespacedResourceID(t *testing.T) {
+	cases := map[string]bool{
+		"uva-lib:329370": true,
+		"tsb:59492":      true,
+		"tsm:1503507":    true,
+		"version":        false,
+		"":               false,
+		":59492":         false,
+		"tsb:":           false,
+		"no-colon":       false,
+	}
+	for id, want := range cases {
+		if got := isNamespacedResourceID(id); got != want {
+			t.Fatalf("isNamespacedResourceID(%q)=%v want %v", id, got, want)
+		}
+	}
+}
+
+func TestRootPathReturnsNotFoundForNonResourcePaths(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	svc := &ServiceContext{DetailResourceBase: "https://example.com/api/resource"}
 	r := gin.New()

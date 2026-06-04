@@ -11,7 +11,7 @@ Virgo 4 pool web service that searches the UVA digital image Bedrock Knowledge B
 - `POST /api/search` — `v4api.SearchRequest` → `v4api.PoolResult` (JWT required)
 - `POST /api/search/facets` — empty facet list (JWT required)
 - `GET /api/resource/:id` — proxies to Solr images pool `/api/resource/{id}` (JWT required)
-- `GET /uva-lib:...` — same proxy for `pool.url` + identifier requests
+- `GET /{namespace:id}` — same proxy for `pool.url` + identifier requests (e.g. `uva-lib:123`, `tsb:59492`)
 
 ## Configuration
 

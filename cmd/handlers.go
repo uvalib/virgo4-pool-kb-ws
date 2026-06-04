@@ -8,7 +8,15 @@ import (
 	"github.com/uvalib/virgo4-api/v4api"
 )
 
-const uvaLibIDPrefix = "uva-lib:"
+// isNamespacedResourceID reports whether path looks like a Virgo item id (e.g. uva-lib:123, tsb:59492).
+func isNamespacedResourceID(id string) bool {
+	id = strings.TrimSpace(id)
+	if id == "" || strings.Contains(id, "/") {
+		return false
+	}
+	prefix, suffix, ok := strings.Cut(id, ":")
+	return ok && prefix != "" && suffix != ""
+}
 
 type providerDetails struct {
 	Provider    string `json:"provider"`
@@ -51,17 +59,17 @@ func (svc *ServiceContext) facets(c *gin.Context) {
 // getResource proxies GET /api/resource/:id to the Solr images pool.
 func (svc *ServiceContext) getResource(c *gin.Context) {
 	id := strings.TrimSpace(c.Param("id"))
-	if id == "" {
+	if !isNamespacedResourceID(id) {
 		c.String(http.StatusBadRequest, "missing resource id")
 		return
 	}
 	svc.proxyResourceDetail(c, id)
 }
 
-// getResourceByID proxies GET /uva-lib:… (pool root identifier URLs) to the Solr images pool.
+// getResourceByID proxies GET /{namespace:id} (pool root identifier URLs) to the Solr images pool.
 func (svc *ServiceContext) getResourceByID(c *gin.Context) {
 	id := strings.TrimSpace(strings.TrimPrefix(c.Request.URL.Path, "/"))
-	if !strings.HasPrefix(id, uvaLibIDPrefix) {
+	if !isNamespacedResourceID(id) {
 		c.String(http.StatusNotFound, "not found")
 		return
 	}

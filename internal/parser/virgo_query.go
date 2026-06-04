@@ -17,8 +17,8 @@ func ToKBTextQuery(virgoQuery string) string {
 	log.Printf("virgo query=%q", q)
 
 	replacements := []struct{ old, new string }{
-		{"{", "("},
-		{"}", ")"},
+		{"{", ""},
+		{"}", ""},
 		{"keyword:", ""},
 		{"title:", ""},
 		{"author:", ""},
