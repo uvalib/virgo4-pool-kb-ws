@@ -44,9 +44,6 @@ func HitToDetailFields(hit provider.Hit, opts Options) []v4api.RecordField {
 func recordFields(hit provider.Hit, opts Options) []v4api.RecordField {
 	fields := make([]v4api.RecordField, 0, 8)
 	id := hit.ID
-	if id == "" {
-		id = hit.IIIFID
-	}
 	fields = append(fields, v4api.RecordField{Name: "id", Type: "identifier", Label: "Identifier", Value: id, CitationPart: "id"})
 	if hit.Title != "" {
 		fields = append(fields, v4api.RecordField{Name: "title", Type: "title", Label: "Title", Value: hit.Title, CitationPart: "title"})
@@ -54,9 +51,10 @@ func recordFields(hit provider.Hit, opts Options) []v4api.RecordField {
 	if hit.Collection != "" {
 		fields = append(fields, v4api.RecordField{Name: "digital_collection", Type: "collection", Label: "Digital Collection", Value: hit.Collection})
 	}
-	if hit.IIIFID != "" {
-		fields = append(fields, v4api.RecordField{Name: "iiif_id", Type: "identifier", Label: "IIIF ID", Value: hit.IIIFID, Visibility: "detailed"})
-	}
+	// Omit iiif_id field to avoid duplicate identifiers in the search results
+	//if hit.IIIFID != "" {
+	//	fields = append(fields, v4api.RecordField{Name: "iiif_id", Type: "identifier", Label: "IIIF ID", Value: hit.IIIFID, Visibility: "detailed"})
+	//}
 	if imageURL := opts.resolveImageURL(hit); imageURL != "" {
 		fields = append(fields, v4api.RecordField{Name: "iiif_image_url", Type: "iiif-image-url", Label: "IIIF Image", Value: imageURL})
 	}
