@@ -8,13 +8,13 @@ import (
 
 func TestApplyEnv(t *testing.T) {
 	t.Setenv("V4_POOL_KB_PORT", "7777")
-	t.Setenv("V4_POOL_KB_JWT_KEY", "test-key")
-	t.Setenv("V4_POOL_KB_AWS_REGION", "test-region")
-	t.Setenv("V4_POOL_KB_ID", "KBTEST")
-	t.Setenv("V4_POOL_KB_SCORE_THRESHOLD", "0.5")
-	t.Setenv("V4_POOL_KB_DEFAULT_LIMIT", "10")
-	t.Setenv("V4_POOL_KB_PROVIDER", "bedrock")
-	t.Setenv("V4_POOL_KB_IIIF_IMAGE_BASE_URL", "https://iiif.lib.virginia.edu/iiif")
+	t.Setenv("JWT_KEY", "test-key")
+	t.Setenv("AWS_REGION", "test-region")
+	t.Setenv("AWS_KB_ID", "KBTEST")
+	t.Setenv("AWS_KB_SCORE_THRESHOLD", "0.5")
+	t.Setenv("AWS_KB_DEFAULT_LIMIT", "10")
+	t.Setenv("AWS_KB_PROVIDER", "bedrock")
+	t.Setenv("IIIF_BASE_URL", "https://iiif.lib.virginia.edu/iiif")
 	cfg := &ServiceConfig{}
 	applyEnv(cfg)
 	if cfg.Port != 7777 || cfg.KnowledgeBaseID != "KBTEST" {
@@ -41,7 +41,7 @@ func TestApplyEnv(t *testing.T) {
 }
 
 func TestDetailBaseEnv(t *testing.T) {
-	t.Setenv("V4_KB_DETAIL_BASE", "http://localhost:8983/api/resource")
+	t.Setenv("VIRGO_DETAIL_SOURCE", "http://localhost:8983/api/resource")
 	cfg := &ServiceConfig{}
 	applyEnv(cfg)
 	if cfg.DetailResourceBase != "http://localhost:8983/api/resource" {
@@ -51,8 +51,8 @@ func TestDetailBaseEnv(t *testing.T) {
 
 func TestFlagOverridesEnv(t *testing.T) {
 	t.Setenv("V4_POOL_KB_PORT", "8888")
-	t.Setenv("V4_POOL_KB_JWT_KEY", "env-key")
-	t.Setenv("V4_POOL_KB_AWS_REGION", "env-region")
+	t.Setenv("JWT_KEY", "env-key")
+	t.Setenv("AWS_REGION", "env-region")
 
 	oldArgs := os.Args
 	defer func() { os.Args = oldArgs }()

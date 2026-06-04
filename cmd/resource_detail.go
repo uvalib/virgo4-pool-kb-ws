@@ -31,7 +31,7 @@ func requestJWT(c *gin.Context) string {
 
 func (svc *ServiceContext) fetchDetailResource(ctx context.Context, id, jwt string) (int, []byte, string, error) {
 	if svc.DetailResourceBase == "" {
-		return http.StatusInternalServerError, nil, "", fmt.Errorf("detail resource base not configured (set V4_KB_DETAIL_BASE)")
+		return http.StatusInternalServerError, nil, "", fmt.Errorf("detail resource base not configured (set VIRGO_DETAIL_SOURCE)")
 	}
 
 	tgt := detailResourceURL(svc.DetailResourceBase, id)

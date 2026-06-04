@@ -32,18 +32,19 @@ func LoadConfiguration() *ServiceConfig {
 	flag.Float64Var(&cfg.ScoreThreshold, "threshold", cfg.ScoreThreshold, "Minimum retrieval score")
 	flag.IntVar(&cfg.DefaultLimit, "limit", cfg.DefaultLimit, "Default page size for retrieval")
 	flag.StringVar(&cfg.ProviderType, "provider", cfg.ProviderType, "Knowledge base provider: bedrock or mock")
-	flag.StringVar(&cfg.IIIFImageBaseURL, "iiifbase", cfg.IIIFImageBaseURL, "IIIF image API base URL (used when KB metadata has iiif_id only)")
+	flag.StringVar(&cfg.IIIFImageBaseURL, "iiifbase", cfg.IIIFImageBaseURL, "IIIF image API base URL")
 	flag.StringVar(&cfg.DetailResourceBase, "detailresource", cfg.DetailResourceBase, "Solr images pool /api/resource URL base (appends /{id})")
 	flag.String("config", "", "YAML config file (also V4_POOL_KB_CONFIG); path read before flags")
 
 	flag.Parse()
 
 	if cfg.JWTKey == "" {
-		log.Fatal("jwtkey is required (flag -jwtkey, env V4_POOL_KB_JWT_KEY)")
+		log.Fatal("jwtkey is required (flag -jwtkey, env JWT_KEY)")
 	}
 
-	log.Printf("detail resource base=%s", cfg.DetailResourceBase)
-	log.Printf("[CONFIG] port=%d region=%s kb=%s threshold=%.3f limit=%d provider=%s", cfg.Port, cfg.AWSRegion, cfg.KnowledgeBaseID, cfg.ScoreThreshold, cfg.DefaultLimit, cfg.ProviderType)
+	log.Printf("[CONFIG] port=%d region=%s kb=%s threshold=%.3f limit=%d provider=%s iiif=%s detail=%s",
+		cfg.Port, cfg.AWSRegion, cfg.KnowledgeBaseID, cfg.ScoreThreshold, cfg.DefaultLimit, cfg.ProviderType, cfg.IIIFImageBaseURL, cfg.DetailResourceBase,
+	)
 	return cfg
 }
 
@@ -53,32 +54,32 @@ func applyEnv(cfg *ServiceConfig) {
 			cfg.Port = n
 		}
 	}
-	if v := os.Getenv("V4_POOL_KB_JWT_KEY"); v != "" {
+	if v := os.Getenv("JWT_KEY"); v != "" {
 		cfg.JWTKey = v
 	}
-	if v := os.Getenv("V4_POOL_KB_AWS_REGION"); v != "" {
+	if v := os.Getenv("AWS_REGION"); v != "" {
 		cfg.AWSRegion = v
 	}
-	if v := os.Getenv("V4_POOL_KB_ID"); v != "" {
+	if v := os.Getenv("AWS_KB_ID"); v != "" {
 		cfg.KnowledgeBaseID = v
 	}
-	if v := os.Getenv("V4_POOL_KB_SCORE_THRESHOLD"); v != "" {
+	if v := os.Getenv("AWS_KB_SCORE_THRESHOLD"); v != "" {
 		if f, err := strconv.ParseFloat(v, 64); err == nil {
 			cfg.ScoreThreshold = f
 		}
 	}
-	if v := os.Getenv("V4_POOL_KB_PROVIDER"); v != "" {
+	if v := os.Getenv("AWS_KB_PROVIDER"); v != "" {
 		cfg.ProviderType = v
 	}
-	if v := os.Getenv("V4_POOL_KB_DEFAULT_LIMIT"); v != "" {
+	if v := os.Getenv("AWS_KB_DEFAULT_LIMIT"); v != "" {
 		if n, err := strconv.Atoi(v); err == nil {
 			cfg.DefaultLimit = n
 		}
 	}
-	if v := os.Getenv("V4_POOL_KB_IIIF_IMAGE_BASE_URL"); v != "" {
+	if v := os.Getenv("IIIF_BASE_URL"); v != "" {
 		cfg.IIIFImageBaseURL = v
 	}
-	if v := os.Getenv("V4_KB_DETAIL_BASE"); v != "" {
+	if v := os.Getenv("VIRGO_DETAIL_SOURCE"); v != "" {
 		cfg.DetailResourceBase = v
 	}
 }

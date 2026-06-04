@@ -19,14 +19,15 @@ Precedence: **defaults < environment < command-line flags**.
 
 | Environment variable | Description |
 | --- | --- |
-| `V4_POOL_KB_CONFIG` | Path to YAML config file |
 | `V4_POOL_KB_PORT` | HTTP port (default `8087`) |
-| `V4_POOL_KB_JWT_KEY` | JWT HMAC secret (required) |
-| `V4_POOL_KB_AWS_REGION` | AWS region (default `us-east-1`) |
-| `V4_POOL_KB_ID` | Bedrock knowledge base id |
-| `V4_POOL_KB_SCORE_THRESHOLD` | Minimum retrieval score |
-| `V4_POOL_KB_DEFAULT_LIMIT` | Default retrieval result count |
-| `V4_KB_DETAIL_BASE` | Solr images pool `/api/resource/` URL base; `{id}` is appended; KB pool proxies the response with the caller JWT |
+| `JWT_KEY` | JWT secret (required) |
+| `AWS_REGION` | AWS region (default `us-east-1`) |
+| `AWS_KB_ID` | Bedrock knowledge base id |
+| `AWS_KB_SCORE_THRESHOLD` | Minimum retrieval score |
+| `AWS_KB_DEFAULT_LIMIT` | Default retrieval result count |
+| `AWS_KB_PROVIDER` | Knowledge base backend: `bedrock` or `mock` (default `bedrock`) |
+| `IIIF_BASE_URL` | IIIF image API base. Used with kb `iiif_id` to make image URLs (default `https://iiif.lib.virginia.edu/iiif`) |
+| `VIRGO_DETAIL_SOURCE` | Solr images pool `/api/resource/` URL base; `{id}` is appended; KB pool proxies the response with the caller JWT |
 
 ## Local run
 
@@ -41,7 +42,7 @@ Use the same `V4_JWT_KEY` as `virgo4-search-ws` / `virgo4-client`.
 VS Code tasks include server startup for **KB pool (bedrock)** and **KB pool (mock)** plus build and test tasks (`.vscode/tasks.json`).
 
 ```bash
-export V4_POOL_KB_JWT_KEY=jwt-key
+export JWT_KEY=jwt-key
 ./package/scripts/entry.sh
 ```
 

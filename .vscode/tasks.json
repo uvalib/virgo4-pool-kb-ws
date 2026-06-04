@@ -16,7 +16,8 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$go"]
+      "problemMatcher": ["$go"],
+      "hide": true
     },
     {
       "label": "KB pool test",
@@ -38,7 +39,9 @@
     {
       "label": "KB pool (bedrock)",
       "type": "shell",
-      "command": "V4_POOL_KB_PROVIDER=bedrock ./scripts/dev.local.sh",
+      "command": "AWS_KB_PROVIDER=bedrock ./scripts/dev.local.sh",
+      "dependsOn": ["KB pool build"],
+      "dependsOrder": "sequence",
       "options": {
         "cwd": "${workspaceFolder}",
         "shell": {
@@ -72,7 +75,9 @@
     {
       "label": "KB pool (mock)",
       "type": "shell",
-      "command": "V4_POOL_KB_PROVIDER=mock ./scripts/dev.local.sh",
+      "command": "AWS_KB_PROVIDER=mock ./scripts/dev.local.sh",
+      "dependsOn": ["KB pool build"],
+      "dependsOrder": "sequence",
       "options": {
         "cwd": "${workspaceFolder}",
         "shell": {
