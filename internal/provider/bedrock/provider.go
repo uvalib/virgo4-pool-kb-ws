@@ -67,12 +67,13 @@ func (p *Provider) Search(ctx context.Context, query string, limit int, threshol
 	hits := make([]provider.Hit, 0, len(resp.RetrievalResults))
 	for _, ref := range resp.RetrievalResults {
 		hit := provider.Hit{
-			ID:              extractMetadataString(ref.Metadata, "id", "image_id"),
-			IIIFID:          extractMetadataString(ref.Metadata, "iiif_id"),
-			IIIFImageURL:    extractMetadataString(ref.Metadata, "url_iiif_image_a", "iiif_image_url"),
-			IIIFManifestURL: extractMetadataString(ref.Metadata, "url_iiif_manifest_a", "iiif_manifest_url"),
-			Title:           extractMetadataString(ref.Metadata, "title", "title_a"),
-			Collection:      extractMetadataString(ref.Metadata, "collection", "digital_collection_a"),
+			ID:         extractMetadataString(ref.Metadata, "id", "image_id"),
+			IIIFID:     extractMetadataString(ref.Metadata, "iiif_id"),
+			Title:      extractMetadataString(ref.Metadata, "title", "title_a"),
+			Collection: extractMetadataString(ref.Metadata, "collection", "digital_collection_a"),
+			Subject:    extractMetadataString(ref.Metadata, "subject"),
+			Notes:      extractMetadataString(ref.Metadata, "notes"),
+			Location:   extractMetadataString(ref.Metadata, "location"),
 		}
 		if ref.Content != nil && ref.Content.Text != nil {
 			hit.Content = *ref.Content.Text

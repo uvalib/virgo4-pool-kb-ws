@@ -19,7 +19,16 @@ func TestSearchHandlerReturnsPoolResult(t *testing.T) {
 		Version: "test",
 		JWTKey:  "secret",
 		SearchService: &service.SearchService{
-			Provider:     &provider.MockProvider{Hits: []provider.Hit{{ID: "1", Title: "A"}}},
+			Provider: &provider.MockProvider{Hits: []provider.Hit{{
+				ID:         "1",
+				IIIFID:     "1",
+				Title:      "A",
+				Collection: "Sample Collection",
+				Subject:    "Sample Subject",
+				Notes:      "Sample Notes",
+				Location:   "Charlottesville, VA",
+				Content:    "Sample summary content",
+			}}},
 			DefaultLimit: 20,
 		},
 	}
@@ -42,6 +51,27 @@ func TestSearchHandlerReturnsPoolResult(t *testing.T) {
 	}
 	if len(resp.Groups) != 1 {
 		t.Fatalf("expected 1 group, got %d", len(resp.Groups))
+	}
+
+	want := map[string]string{
+		"id":                 "1",
+		"title":              "A",
+		"digital_collection": "Sample Collection",
+		"subject":            "Sample Subject",
+		"notes":              "Sample Notes",
+		"location":           "Charlottesville, VA",
+		"iiif_image_url":     "https://iiif.lib.virginia.edu/iiif/1",
+		"iiif_manifest_url":  "https://iiif.lib.virginia.edu/iiif/1/manifest",
+		"summary":            "Sample summary content",
+	}
+	got := make(map[string]string)
+	for _, f := range resp.Groups[0].Records[0].Fields {
+		got[f.Name] = f.Value
+	}
+	for name, value := range want {
+		if got[name] != value {
+			t.Fatalf("%q=%q want %q", name, got[name], value)
+		}
 	}
 }
 

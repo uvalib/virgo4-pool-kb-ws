@@ -36,13 +36,26 @@ func TestMetadataValueToStringValueFieldFormat(t *testing.T) {
 
 func TestExtractMetadataStringFromMap(t *testing.T) {
 	meta := map[string]interface{}{
-		"iiif_id": &memberString{Value: "uva-lib:999"},
-		"title":   &memberString{Value: "Sample Title"},
+		"id":         &memberString{Value: "uva-lib:123"},
+		"iiif_id":    &memberString{Value: "uva-lib:999"},
+		"title":      &memberString{Value: "Sample Title"},
+		"collection": &memberString{Value: "Sample Collection"},
+		"subject":    &memberString{Value: "Sample Subject"},
+		"notes":      &memberString{Value: "Sample Notes"},
+		"location":   &memberString{Value: "Charlottesville, VA"},
 	}
-	if got := extractMetadataString(meta, "iiif_id"); got != "uva-lib:999" {
-		t.Fatalf("iiif_id=%q", got)
+	cases := map[string]string{
+		"id":         "uva-lib:123",
+		"iiif_id":    "uva-lib:999",
+		"title":      "Sample Title",
+		"collection": "Sample Collection",
+		"subject":    "Sample Subject",
+		"notes":      "Sample Notes",
+		"location":   "Charlottesville, VA",
 	}
-	if got := extractMetadataString(meta, "title"); got != "Sample Title" {
-		t.Fatalf("title=%q", got)
+	for key, want := range cases {
+		if got := extractMetadataString(meta, key); got != want {
+			t.Fatalf("%s=%q want %q", key, got, want)
+		}
 	}
 }

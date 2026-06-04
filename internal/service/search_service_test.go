@@ -57,11 +57,21 @@ func TestSearchProviderError(t *testing.T) {
 }
 
 func TestResourceExactMatch(t *testing.T) {
+	hit := provider.Hit{
+		ID:         "target-id",
+		IIIFID:     "target-id",
+		Title:      "Right",
+		Collection: "Sample Collection",
+		Subject:    "Sample Subject",
+		Notes:      "Sample Notes",
+		Location:   "Charlottesville, VA",
+		Content:    "Sample summary content",
+	}
 	svc := &SearchService{
 		Provider: &provider.MockProvider{
 			Hits: []provider.Hit{
 				{ID: "other", Title: "Wrong"},
-				{ID: "target-id", Title: "Right"},
+				hit,
 			},
 		},
 		DefaultLimit: 20,
@@ -73,8 +83,29 @@ func TestResourceExactMatch(t *testing.T) {
 	if status != http.StatusOK {
 		t.Fatalf("status=%d", status)
 	}
-	if len(fields) == 0 || fields[0].Value != "target-id" {
-		t.Fatalf("unexpected fields: %+v", fields)
+
+	want := map[string]string{
+		"id":                 "target-id",
+		"title":              "Right",
+		"digital_collection": "Sample Collection",
+		"subject":            "Sample Subject",
+		"notes":              "Sample Notes",
+		"location":           "Charlottesville, VA",
+		"iiif_image_url":     "https://iiif.lib.virginia.edu/iiif/target-id",
+		"iiif_manifest_url":  "https://iiif.lib.virginia.edu/iiif/target-id/manifest",
+		"summary":            "Sample summary content",
+	}
+	got := make(map[string]string, len(fields))
+	for _, f := range fields {
+		got[f.Name] = f.Value
+	}
+	for name, value := range want {
+		if got[name] != value {
+			t.Fatalf("%q=%q want %q", name, got[name], value)
+		}
+	}
+	if len(fields) != len(want) {
+		t.Fatalf("got %d fields want %d: %+v", len(fields), len(want), fields)
 	}
 }
 

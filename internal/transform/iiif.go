@@ -21,9 +21,6 @@ func (o Options) imageBaseURL() string {
 }
 
 func (o Options) resolveImageURL(hit provider.Hit) string {
-	if url := strings.TrimSpace(hit.IIIFImageURL); url != "" {
-		return strings.TrimRight(url, "/")
-	}
 	if hit.IIIFID == "" {
 		return ""
 	}
@@ -31,9 +28,6 @@ func (o Options) resolveImageURL(hit provider.Hit) string {
 }
 
 func (o Options) resolveManifestURL(hit provider.Hit) string {
-	if url := strings.TrimSpace(hit.IIIFManifestURL); url != "" {
-		return strings.TrimRight(url, "/")
-	}
 	if imageURL := o.resolveImageURL(hit); imageURL != "" {
 		return imageURL + "/manifest"
 	}

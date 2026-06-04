@@ -51,6 +51,15 @@ func recordFields(hit provider.Hit, opts Options) []v4api.RecordField {
 	if hit.Collection != "" {
 		fields = append(fields, v4api.RecordField{Name: "digital_collection", Type: "collection", Label: "Digital Collection", Value: hit.Collection})
 	}
+	if hit.Subject != "" {
+		fields = append(fields, v4api.RecordField{Name: "subject", Type: "subject", Label: "Subject", Value: hit.Subject})
+	}
+	if hit.Notes != "" {
+		fields = append(fields, v4api.RecordField{Name: "notes", Type: "notes", Label: "Notes", Value: hit.Notes})
+	}
+	if hit.Location != "" {
+		fields = append(fields, v4api.RecordField{Name: "location", Type: "location", Label: "Location", Value: hit.Location})
+	}
 	// Omit iiif_id field to avoid duplicate identifiers in the search results
 	//if hit.IIIFID != "" {
 	//	fields = append(fields, v4api.RecordField{Name: "iiif_id", Type: "identifier", Label: "IIIF ID", Value: hit.IIIFID, Visibility: "detailed"})

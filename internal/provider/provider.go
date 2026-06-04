@@ -4,14 +4,15 @@ import "context"
 
 // Hit is a normalized knowledge-base retrieval result.
 type Hit struct {
-	ID              string
-	IIIFID          string
-	IIIFImageURL    string
-	IIIFManifestURL string
-	Title           string
-	Collection      string
-	Score           float64
-	Content         string
+	ID         string
+	IIIFID     string
+	Title      string
+	Collection string
+	Subject    string
+	Notes      string
+	Location   string
+	Score      float64
+	Content    string
 }
 
 // KnowledgeBaseProvider retrieves records from a backing knowledge base.
