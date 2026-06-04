@@ -61,6 +61,8 @@ func (p *Provider) Search(ctx context.Context, query string, limit int, threshol
 	if err != nil {
 		return nil, fmt.Errorf("bedrock retrieve: %w", err)
 	}
+	// print the first result
+	printKBMetadata(resp.RetrievalResults[0].Metadata)
 
 	hits := make([]provider.Hit, 0, len(resp.RetrievalResults))
 	for _, ref := range resp.RetrievalResults {

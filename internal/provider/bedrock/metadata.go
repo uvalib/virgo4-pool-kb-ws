@@ -2,6 +2,7 @@ package bedrock
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"regexp"
 	"strings"
@@ -127,4 +128,16 @@ func cleanMetadataString(s string) string {
 	}
 
 	return s
+}
+// printKBMetadata logs KB metadata keys with decoded string values.
+func printKBMetadata(metadata interface{}) {
+	mv := reflect.ValueOf(metadata)
+	if mv.Kind() != reflect.Map {
+		return
+	}
+	for _, k := range mv.MapKeys() {
+		key := fmt.Sprintf("%v", k.Interface())
+		val := metadataValueToString(mv.MapIndex(k).Interface())
+		log.Printf("metadata %s=%q", key, val)
+	}
 }
