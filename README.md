@@ -46,6 +46,13 @@ export JWT_KEY=jwt-key
 ./package/scripts/entry.sh
 ```
 
+## Deployment
+
+Staging ECS and CodePipeline live in `terraform-infrastructure`:
+
+- `virgo4.lib.virginia.edu/ecs-tasks/staging/pool-kb-ws`
+- `virgo4.lib.virginia.edu/pipelines/pool-kb-ws`
+
 ## Tests
 
 ```bash

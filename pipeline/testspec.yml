@@ -1,0 +1,22 @@
+#
+# testspec.yml
+#
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.x
+
+  pre_build:
+    commands:
+      - git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/uvalib/standard-ws-tester
+
+  build:
+    commands:
+      - cd standard-ws-tester; unset GOPATH; unset GOROOT; make test
+
+#
+# end of file
+#
